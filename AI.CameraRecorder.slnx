@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/AI.CameraRecorder.App/AI.CameraRecorder.App.csproj" />
+  <Project Path="tests/AI.CameraRecorder.Core.Tests/AI.CameraRecorder.Core.Tests.csproj" />
+</Solution>
