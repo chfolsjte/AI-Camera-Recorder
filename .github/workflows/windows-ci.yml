@@ -1,0 +1,34 @@
+name: Windows CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-publish:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Restore
+        run: dotnet restore AI.CameraRecorder.slnx
+      - name: Test
+        run: dotnet test tests/AI.CameraRecorder.Core.Tests/AI.CameraRecorder.Core.Tests.csproj --configuration Release --no-restore
+      - name: Build WinUI 3
+        run: dotnet build src/AI.CameraRecorder.App/AI.CameraRecorder.App.csproj --configuration Release --runtime win-x64 --no-restore
+      - name: Publish self-contained Windows application
+        run: dotnet publish src/AI.CameraRecorder.App/AI.CameraRecorder.App.csproj --configuration Release --runtime win-x64 --self-contained true -p:WindowsAppSDKSelfContained=true -o artifacts/AI-Camera-Recorder-win-x64
+      - name: Upload executable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AI-Camera-Recorder-win-x64
+          path: artifacts/AI-Camera-Recorder-win-x64
+          if-no-files-found: error
