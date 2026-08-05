@@ -1,4 +1,5 @@
 using AI.CameraRecorder.Models;
+using Xunit;
 
 namespace AI.CameraRecorder.Core.Tests;
 
